@@ -29,6 +29,14 @@ public class CarView extends JFrame{
     int gasAmount = 0;
     JLabel gasLabel = new JLabel("Amount of gas");
 
+    //JPanel bedPanel = new JPanel();
+    JLabel angleLabel = new JLabel("Bed angle: 0.0");
+
+    int brakeAmount;
+    JSpinner brakeSpinner = new JSpinner();
+
+    int bedDegree = 0;
+
     JButton gasButton = new JButton("Gas");
     JButton brakeButton = new JButton("Brake");
     JButton turboOnButton = new JButton("Saab Turbo on");
@@ -44,7 +52,6 @@ public class CarView extends JFrame{
         this.carC = cc;
         initComponents(framename);
     }
-
     // Sets everything in place and fits everything
     // TODO: Take a good look and make sure you understand how these methods and components work
     private void initComponents(String title) {
@@ -54,8 +61,6 @@ public class CarView extends JFrame{
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
         this.add(drawPanel);
-
-
 
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(0, //initial value
@@ -68,10 +73,18 @@ public class CarView extends JFrame{
                 gasAmount = (int) ((JSpinner)e.getSource()).getValue();
             }
         });
+        brakeSpinner = new JSpinner(spinnerModel);
+        brakeSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) { brakeAmount = (int) ((JSpinner)e.getSource()).getValue();
+
+            }
+        });
 
         gasPanel.setLayout(new BorderLayout());
         gasPanel.add(gasLabel, BorderLayout.PAGE_START);
-        gasPanel.add(gasSpinner, BorderLayout.PAGE_END);
+        gasPanel.add(gasSpinner,BorderLayout.CENTER);
+        gasPanel.add(angleLabel, BorderLayout.PAGE_END);
 
         this.add(gasPanel);
 
@@ -105,6 +118,56 @@ public class CarView extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 carC.gas(gasAmount);
+                System.out.println("gas checked!");
+            }
+        });
+        brakeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.brake(brakeAmount);
+                System.out.println("brake checked!");}
+        });
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.startEngine();
+                System.out.println("on checked");}
+        });
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.stopEngine();
+                System.out.println("off checked");}
+        });
+        turboOffButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.turboOff();
+                System.out.println("turbo off checked");
+            }
+        });
+        turboOnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.turboOn();
+                System.out.println("turbo on checked");
+            }
+        });
+        liftBedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.liftBed(10);
+                angleLabel.setText("Bed angle:" + carC.getScaniaBedAngle());
+                System.out.println("lifted");
+            }
+        });
+        lowerBedButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carC.lowerBed(10);
+                angleLabel.setText("Bed angle:" + carC.getScaniaBedAngle());
+                System.out.println("lowered");
+
             }
         });
 

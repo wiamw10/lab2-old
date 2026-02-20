@@ -1,0 +1,43 @@
+
+cohesion: how well the parts inside one class belong together
+(we want)high cohesion - one class has one clear job
+
+coupling: how much one class depends on other classes
+(we want)low coupling - classes are less tightly connected
+
+dependency inversion principle (dip)
+: high-level modules(control logic) should not depend on low-level modules(details)
+both should depend on abstractions
+
+separation of concerns (soc)
+: split the system into parts where each part handles one concern
+
+single responsibility principle (srp)
+: a class should have one main responsibility, so it has one primary reason to change
+
+Q&A
+1.Vilka beroenden är nödvändiga?
+
+inheritance: volvo,saab,scania -> car
+- they share common car state and behavior
+realization(implements): car -> movable, flak -> liftable
+- needed because movement is a core contract for all cars
+- needed because flak behavior is defined by that interface
+composition(has): scania -> flak
+- the bed logic is part of scania's core behavior
+carcontroller and carview
+- according to MVC, to send commands and get updates
+
+2. Vilka klasser är beroende av varandra som inte borde vara det?
+3. Finns det starkare beroenden än nödvändigt?
+
+CarController depends on concrete class(scania, saab, workshop, drawpanel)
+instead of abstractions. DIP warning!!
+
+those fixed value of car/workshop width and height
+- only work on these specific pictures
+- we should instead generelize
+
+4. På vilka klasser skulle ni behöva tillämpa dekomposition för att bättre följa SoC och SRP?
+- CarController: it currently has multiple responsibilities and many reasons to change
+split into parts CollisionLogic (wall/workskop collision), WorkshopService (load/unload rules)
