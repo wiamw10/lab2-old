@@ -36,7 +36,11 @@ public class HitWall {
             }
 
             if (hitWall) {
-                car.turnRight(); car.turnRight();
+                car.stopEngine();
+                car.turnRight();
+                car.turnRight();
+                car.startEngine();
+
             }
 
         }
