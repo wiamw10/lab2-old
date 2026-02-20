@@ -1,0 +1,26 @@
+
+For better SoC, SRP, we mainly need to decompose CarController
+SoC : split the system into parts where each part handles one concern
+SRP : a class should have one main responsibility, so it has one primary reason to change
+
+CarController - it currently has multiple responsibilities
+1. write a new class CollisionLogic to check for wall and workshop collisions
+2. give CollisionLogic a method collided so we can call from CarController,
+3. move if-statement for collisions from TimeListener in CarController to CollisionLogic
+4. write a new class WorkshopService to handles the rule for workshop collisions,
+5. give WorkshopService a method meetVolvo240 so we can call from CarController,
+ - receive a Car when collision with workshop happened
+ - check if it's a Volvo240, load it into Workshop<Volvo240>
+ - otherwise, non-Volvo240 can drive pass it? bounce?
+
+6. write a new interface Turboable with methods SetTurboOn and SetTurbo that Saab95 can
+later implement it. before the controller must know every type of car that has a turbo
+ and it can become a bad design if we have more than one type of car that has a turbo, we
+ are forced to modify in the controller everytime. it breaks OCP.
+
+7. write a new interface Rampable to handles cars that have ramp.This eliminates instanceof (insert specific car) in
+carController lowerTheBed / liftThebed and we can add more cars with that function. Same idea can be applied for
+Turboable and start/stopTurbo in carController. This is a great practice for dependency inversion principle.
+
+8. instead of hardcoded width and height of cars/workshop, we can use BufferedImage to get width
+and height of images. there are methods getWidth() and getHeight()
