@@ -19,15 +19,26 @@ public class CarView extends JFrame{
 
     // The controller member
     CarController carC;
-
-    DrawPanel drawPanel = new DrawPanel(X, Y-240);
-
     JPanel controlPanel = new JPanel();
-
+    DrawPanel drawPanel;
     JPanel gasPanel = new JPanel();
+    JPanel degreePanel = new JPanel();
+    JPanel InputPanel = new JPanel();
+
+    //Gas spinner
     JSpinner gasSpinner = new JSpinner();
     int gasAmount = 0;
+
+    //Degree spinner
+    JSpinner degreeSpinner;
+    double degreeAmount = 0 ;
+
+
+    SpinnerModel degreeModel =
+            new SpinnerNumberModel(0,0,70,1);
+
     JLabel gasLabel = new JLabel("Amount of gas");
+    JLabel degreeLabel = new JLabel("Flatbed Angle");
 
     JButton gasButton = new JButton("Gas");
     JButton brakeButton = new JButton("Brake");
@@ -39,9 +50,11 @@ public class CarView extends JFrame{
     JButton startButton = new JButton("Start all cars");
     JButton stopButton = new JButton("Stop all cars");
 
+
     // Constructor
     public CarView(String framename, CarController cc){
         this.carC = cc;
+        drawPanel = new DrawPanel(X, Y-240,carC.cars,carC.workshops);
         initComponents(framename);
     }
 
@@ -52,9 +65,7 @@ public class CarView extends JFrame{
         this.setTitle(title);
         this.setPreferredSize(new Dimension(X,Y));
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-
         this.add(drawPanel);
-
 
 
         SpinnerModel spinnerModel =
@@ -64,16 +75,32 @@ public class CarView extends JFrame{
                         1);//step
         gasSpinner = new JSpinner(spinnerModel);
         gasSpinner.addChangeListener(new ChangeListener() {
+
             public void stateChanged(ChangeEvent e) {
                 gasAmount = (int) ((JSpinner)e.getSource()).getValue();
             }
         });
 
+
+        degreeSpinner = new JSpinner(degreeModel);
+        degreeSpinner.addChangeListener(e -> degreeAmount = (int) degreeSpinner.getValue());
+
+
         gasPanel.setLayout(new BorderLayout());
         gasPanel.add(gasLabel, BorderLayout.PAGE_START);
         gasPanel.add(gasSpinner, BorderLayout.PAGE_END);
 
-        this.add(gasPanel);
+
+        degreePanel.setLayout(new BorderLayout());
+        degreePanel.add(degreeLabel, BorderLayout.PAGE_START);
+        degreePanel.add(degreeSpinner, BorderLayout.PAGE_END);
+
+        InputPanel.setLayout(new BoxLayout(InputPanel, BoxLayout.Y_AXIS));
+
+        InputPanel.add(gasPanel);
+        InputPanel.add(degreePanel);
+
+        this.add(InputPanel);
 
         controlPanel.setLayout(new GridLayout(2,4));
 
@@ -107,6 +134,17 @@ public class CarView extends JFrame{
                 carC.gas(gasAmount);
             }
         });
+        brakeButton.addActionListener(e -> carC.brake(gasAmount));
+
+        startButton.addActionListener(e -> carC.startAllEngines());
+        stopButton.addActionListener(e -> carC.stopAllEngines());
+
+        turboOnButton.addActionListener(e -> carC.startTurbo());
+        turboOffButton.addActionListener(e -> carC.stopTurbo());
+
+        liftBedButton.addActionListener(e -> carC.liftTheBed(degreeAmount));
+        lowerBedButton.addActionListener(e -> carC.lowerTheBed(degreeAmount));
+
 
         // Make the frame pack all it's components by respecting the sizes if possible.
         this.pack();
