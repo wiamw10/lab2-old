@@ -15,7 +15,8 @@ public class Collision {
             for (Workshop<Volvo240> ws : workshops){
                 if (car instanceof Volvo240 ){
                     Point P = ws.getPosition();
-                    if (car.getX() == P.x && car.getY() == P.y) {
+                        if  (Math.abs(car.getX() - P.x) < 50  &&
+                            (Math.abs(car.getY() - P.y) < 50)) {
                         ws.load( (Volvo240) car);
                     }
                 }
